@@ -1,0 +1,143 @@
+-------------------------------------------------------------------------------
+import tweepy
+
+consumer_key = "9MI4khhG7wBQuvoK0pPVuX6il"
+consumer_secret = "oa70QGiLj8buNQpXwc9LHBRxyXCrKLSA9FvUS7V3NOpJDhetvn"
+access_token = "2216994281-vNyLbe8tctUrlxirgmuZqhPrBCe5ANIFi5AecKW"
+access_token_secret = "JS79GyGOVWRFAca6l2iDEc5vYwePziDmIhxa03pvnxdB4"
+
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+
+auth.set_access_token(access_token, access_token_secret)
+
+api = tweepy.API(auth) 
+
+results = api.search(q=['python','javascript'],count=1)
+
+print(results)
+-----------------------------------------------------------------------------
+**** write the below class as sepatate script and run as 
+python  TwitterStreaming.py >> twittertweets.txt
+
+
+>>>>>
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
+from tweepy import Stream
+
+consumer_key = "9MI4khhG7wBQuvoK0pPVuX6il"
+consumer_secret = "oa70QGiLj8buNQpXwc9LHBRxyXCrKLSA9FvUS7V3NOpJDhetvn"
+access_token = "2216994281-vNyLbe8tctUrlxirgmuZqhPrBCe5ANIFi5AecKW"
+access_token_secret = "JS79GyGOVWRFAca6l2iDEc5vYwePziDmIhxa03pvnxdB4"
+
+#This is a basic listener that just prints received tweets to stdout.
+class StdOutListener(StreamListener):
+
+    def on_data(self, data):
+        print data
+        return True
+
+    def on_error(self, status):
+        print status
+
+
+if __name__ == '__main__':
+
+    #This handles Twitter authetification and the connection to Twitter Streaming API
+    l = StdOutListener()
+    auth = OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    stream = Stream(auth, l)
+
+    #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
+    stream.filter(track=['python', 'javascript', 'ruby'])
+------------------------------------------------------------------------------------------------------------
+
+import json
+import pandas as pd
+import matplotlib.pyplot as plt
+
+tweets_data_path = '/home/dharani/twittertweets.txt'
+
+tweets_data = []
+tweets_file = open(tweets_data_path, "r")
+for line in tweets_file:
+    try:
+        tweet = json.loads(line)
+        tweets_data.append(tweet)
+    except:
+        continue
+
+
+print (len(tweets_data))
+tweets = pd.DataFrame()
+tweets['text'] = list(map(lambda tweet: tweet['text'], tweets_data))
+tweets['lang'] = list(map(lambda tweet: tweet['lang'], tweets_data))
+tweets['country'] = list(map(lambda tweet: tweet['place']['country'] if tweet['place'] != None else None, tweets_data))
+
+tweets_by_lang = tweets['lang'].value_counts()
+
+fig, ax = plt.subplots()
+ax.tick_params(axis='x', labelsize=15)
+ax.tick_params(axis='y', labelsize=10)
+ax.set_xlabel('Languages', fontsize=15)
+ax.set_ylabel('Number of tweets' , fontsize=15)
+ax.set_title('Top 5 languages', fontsize=15, fontweight='bold')
+tweets_by_lang[:5].plot(ax=ax, kind='bar', color='red')
+
+import re
+
+def word_in_text(word, text):
+    word = word.lower()
+    text = text.lower()
+    match = re.search(word, text)
+    if match:
+        return True
+    return False
+
+tweets['python'] = tweets['text'].apply(lambda tweet: word_in_text('python', tweet))
+tweets['javascript'] = tweets['text'].apply(lambda tweet: word_in_text('javascript', tweet))
+tweets['ruby'] = tweets['text'].apply(lambda tweet: word_in_text('ruby', tweet))
+
+
+print (tweets['python'].value_counts()[True])
+print (tweets['javascript'].value_counts()[True])
+print (tweets['ruby'].value_counts()[True])
+
+prg_langs = ['python', 'javascript', 'ruby']
+tweets_by_prg_lang = [tweets['python'].value_counts()[True], tweets['javascript'].value_counts()[True], tweets['ruby'].value_counts()[True]]
+
+x_pos = list(range(len(prg_langs)))
+width = 0.8
+fig, ax = plt.subplots()
+plt.bar(x_pos, tweets_by_prg_lang, width, alpha=1, color='g')
+
+# Setting axis labels and ticks
+ax.set_ylabel('Number of tweets', fontsize=15)
+ax.set_title('Ranking: python vs. javascript vs. ruby (Raw data)', fontsize=10, fontweight='bold')
+ax.set_xticks([p + 0.4 * width for p in x_pos])
+ax.set_xticklabels(prg_langs)
+plt.grid()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

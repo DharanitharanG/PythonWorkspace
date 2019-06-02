@@ -1,0 +1,146 @@
+---------------------------------------------------------------------------------
+*** map function with if condition***
+>>> numbers = [1,2,3,4,5]
+>>> num_square = map(lambda n : n*n,numbers)
+>>> list(num_square)
+>>> num_square = map(lambda n : n*n if(n%2==0) else n,numbers)
+>>> list(num_square)
+---------------------------------------------------------------------
+** apply function on dataframe *******
+>>> import pandas as pd
+>>> trainees = pd.DataFrame()
+>>> trainees
+>>> trainees['name'] = ['Ketan','Dharani','Nikil']
+>>> trainees['country'] = ['India','Germany','USA']
+>>> trainees
+>>> trainees['country'] 
+>>> trainees.country
+>>> trainees['country'] .apply(lambda x: x.upper())
+>>> trainees.country
+>>> trainees['country']=trainees['country'] .apply(lambda x: x.upper())
+>>> # trainees['country']=trainees['country'] .apply(lambda x: x.lower() if len(x)==3 else x)
+>>> trainees.country
+--------------------------------------------------------------------------------
+****** JSON parsing ********
+import json
+
+>>> with open('/home/dharani/Desktop/Person.json', 'r') as fp:
+...     persons = json.load(fp)
+... 
+>>> persons
+{u'lastName': u'Hall', u'age': 35, u'firstName': u'Alice'}
+>>> persons["age"]
+35
+>>> 
+
+** nested json**
+>>> with open('/home/dharani/Desktop/Person.json', 'r') as fp:
+...     persons = json.load(fp)
+... 
+>>> persons
+{u'lastName': u'Hall', u'age': 35, u'firstName': u'Alice', u'address': {u'street': u'abc street', u'no': 21}}
+>>> persons["address"]
+{u'street': u'abc street', u'no': 21}
+>>> persons["address"]["street"]
+u'abc street'
+>>> str(persons["address"]["street"])
+'abc street'
+>>> type(persons["address"]["street"])
+<type 'unicode'>
+>>> 
+-------------------------------------------------------------------------------
+****** json to pandas dataframe **************
+
+import json
+import matplotlib.pyplot as pyp
+import pandas as pd
+
+data_path = '/home/dharani/Person2.json'
+
+data = []
+file = open(data_path, "r")
+for line in file:
+    try:
+        jso = json.loads(line)
+        data.append(jso)
+    except:
+        continue
+
+>>> print(data)
+[{'firstName': 'Alice', 'lastName': 'Bob', 'age': 35, 'address': {'no': 21, 'country': 'India'}}, {'firstName': 'Dharani', 'lastName': 'Tharan', 'age': 35, 'address': {'no': 24, 'country': 'China'}}, {'firstName': 'CM', 'lastName': 'Pugal', 'age': 35, 'address': {'no': 22, 'country': 'India'}}, {'firstName': 'Kriti', 'lastName': 'priya', 'age': 35, 'address': {'no': 23, 'country': 'USA'}}]
+
+>>> len(data)
+4
+
+students = pd.DataFrame()
+
+students['firstName'] = list(map(lambda x: x['firstName'],data))
+students['lastName'] = list(map(lambda x: x['lastName'],data))
+students['age'] = list(map(lambda x: x['age'],data))
+students['country'] = list(map(lambda x: x['address']['country'] if x['address']['country'] !='' else 'USA' ,data))
+students['feedback'] = list(map(lambda x: x['feedback'],data))
+
+print(students)
+
+import re
+
+def word_in_text(word, text):
+    word = word.lower()
+    text = text.lower()
+    match = re.search(word, text)
+    if match:
+        return True
+    return False
+
+students['good'] = students['feedback'].apply(lambda x: word_in_text('good', x))
+students['bad'] = students['feedback'].apply(lambda x: word_in_text('bad', x))
+
+print (students['good'].value_counts()[True])
+print (students['bad'].value_counts()[True])
+
+-------------------------------------------------------------------------------
+
+feedbacks = ['good', 'bad']
+feedbacks_good_bad = [students['good'].value_counts()[True],students['bad'].value_counts()[True]]
+
+x_pos = list(range(len(feedbacks)))
+width = 0.8
+fig, ax = plt.subplots()
+plt.bar(x_pos, feedbacks_good_bad, width, alpha=1, color='g')
+
+# Setting axis labels and ticks
+ax.set_ylabel('Number of feedbacks', fontsize=15)
+ax.set_title('Ranking: good vs bad feedback', fontsize=10, fontweight='bold')
+ax.set_xticks([p + 0.4 * width for p in x_pos])
+ax.set_xticklabels(feedbacks)
+plt.grid()
+
+pyp.show
+------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

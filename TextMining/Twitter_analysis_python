@@ -1,0 +1,68 @@
+pHQuJLXaOQSK7W8Phuf6weHAn (API key)
+
+SddVAIzHXvI2Orc9MNlgDSyxWA2BCUKxskzu31B5wOt7vDVo9r (API secret key)
+Access token & access token secret
+
+2216994281-I57dJSmXlUnQyVM5PwQlCMxsn4AYr6krVFQPBXf (Access token)new
+
+Ss5g9NRoNX1WOkJgfzKa7nqy94cyXf20zwo9bbeV4r8qp (Access token secret)new
+
+
+
+pip install tweepy
+-----------------------------------------------------------------------------
+import tweepy
+
+consumer_key = "pHQuJLXaOQSK7W8Phuf6weHAn"
+consumer_secret = "SddVAIzHXvI2Orc9MNlgDSyxWA2BCUKxskzu31B5wOt7vDVo9r"
+access_token = "2216994281-I57dJSmXlUnQyVM5PwQlCMxsn4AYr6krVFQPBXf"
+access_token_secret = "Ss5g9NRoNX1WOkJgfzKa7nqy94cyXf20zwo9bbeV4r8qp"
+
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+
+auth.set_access_token(access_token, access_token_secret)
+
+api = tweepy.API(auth) 
+
+
+public_tweets = api.home_timeline()
+
+for tweet in public_tweets:
+   print tweet.text
+-----------------------------------------
+
+
+#### Tweets from a Specific User
+# Creating the API object while passing in auth information
+api = tweepy.API(auth)
+
+# The Twitter user who we want to get tweets from
+name = "relianceJio"
+# Number of tweets to pull
+tweetCount = 20
+
+# Calling the user_timeline function with our parameters
+results = api.user_timeline(id=name, count=tweetCount)
+
+# foreach through all tweets pulled
+for tweet in results:
+   # printing the text stored inside the tweet object
+   print tweet.text
+
+##########Finding Tweets Using a Keyword
+# Creating the API object while passing in auth information
+api = tweepy.API(auth)
+
+# The search term you want to find
+query = "Toptal"
+# Language code (follows ISO 639-1 standards)
+language = "en"
+
+# Calling the user_timeline function with our parameters
+results = api.search(q=query, lang=language)
+
+# foreach through all tweets pulled
+for tweet in results:
+   # printing the text stored inside the tweet object
+   print tweet.user.screen_name,"Tweeted:",tweet.text

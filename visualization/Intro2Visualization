@@ -1,0 +1,7 @@
+Matplotlib: low level, provides lots of freedom.
+Pandas Visualization: easy to use interface, built on Matplotlib.
+Seaborn: high-level interface, great default styles.
+ggplot: based on R's ggplot2, uses Grammar of Graphics.
+Plotly: can create interactive plots.
+------------------------------------------------------------------
+

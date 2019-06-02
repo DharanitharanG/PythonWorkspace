@@ -1,0 +1,9 @@
+EmpId,Gender,Age,Sales,BMI,Income
+E001,M,27,123,Normal,10000
+E002,F,23,100,Obesity,2000
+E003,M,26,190,Normal,3000
+E004,F,25,120,Underweight,5000
+E005,F,24,50,Normal,9000
+E006,F,22,400,Obesity,2500
+E007,M,28,130,Normal,8500
+E008,M,26,160,Underweight,4500
